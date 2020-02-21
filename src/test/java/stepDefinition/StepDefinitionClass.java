@@ -3,6 +3,8 @@ package stepDefinition;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Assert;
@@ -19,42 +21,24 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import pojo.AddPlacePojo;
 import pojo.Location;
+import resources.PayLoadDataForTestBuild;
+import resources.Utils;
 
-public class StepDefinitionClass {
+public class StepDefinitionClass extends Utils {
 	RequestSpecification reqspec;
-	ResponseSpecification resspec;
+	PayLoadDataForTestBuild addPlacePayload = new PayLoadDataForTestBuild()	;
 	Response res;
-	AddPlacePojo inputPlace = new AddPlacePojo();
+	//AddPlacePojo inputPlace = new AddPlacePojo();
 	@Given("Add Place PayLoad")
-	public void add_Place_PayLoad() {
-		
-		Location location = new Location();
-		location.setLat(-38.383494);
-		location.setLng(33.427362);
-		inputPlace.setAccuracy(50);
-		inputPlace.setAddress("29, side layout, cohen 09");
-		inputPlace.setLanguage("French-IN");
-		inputPlace.setName("Frontline house");
-		inputPlace.setLocation(location);
-		ArrayList<String> types = new ArrayList<String>();
-		types.add("shoe park");
-		types.add("shop");
-		inputPlace.setTypes(types);
-		inputPlace.setWebsite("http://google.com");
-		inputPlace.setPhone_number("(+91) 983 893 3937");
-
-		reqspec = new RequestSpecBuilder().setBaseUri("https://rahulshettyacademy.com").setContentType(ContentType.JSON)
-				.addQueryParam("key", "qaclick123").build();
-		resspec = new ResponseSpecBuilder().expectStatusCode(200).expectBody("status", equalTo("OK")).build();
-
-		
+	public void add_Place_PayLoad() throws IOException {
+		reqspec = given().spec(requestSpec()).body(addPlacePayload.getPlacePayload());
 
 	}
 
 	@When("user calls {string} with Post Http Request")
 	public void user_calls_with_Post_Http_Request(String string) {
-		res = given().spec(reqspec).body(inputPlace).when().post("/maps/api/place/add/json").then()
-				.spec(resspec).extract().response();
+		res = reqspec.when().post("/maps/api/place/add/json").then()
+				.spec(responseSpec()).extract().response();
 
 	}
 
@@ -68,7 +52,6 @@ public class StepDefinitionClass {
 	public void in_response_body_is(String key, String value) {
 		String key1=res.jsonPath().get(key);
 		Assert.assertEquals(key1,value);
-		
 
 	}
 }
