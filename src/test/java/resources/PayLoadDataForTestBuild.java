@@ -7,16 +7,16 @@ import pojo.Location;
 
 public class PayLoadDataForTestBuild {
 	
-	public AddPlacePojo getPlacePayload()
+	public AddPlacePojo getPlacePayload(String name, String language, String address)
 	{
 		AddPlacePojo inputPlace = new AddPlacePojo();
 		Location location = new Location();
 		location.setLat(-38.383494);
 		location.setLng(33.427362);
 		inputPlace.setAccuracy(50);
-		inputPlace.setAddress("29, side layout, cohen 09");
-		inputPlace.setLanguage("French-IN");
-		inputPlace.setName("Frontline house");
+		inputPlace.setAddress(address);
+		inputPlace.setLanguage(language);
+		inputPlace.setName(name);
 		inputPlace.setLocation(location);
 		ArrayList<String> types = new ArrayList<String>();
 		types.add("shoe park");
