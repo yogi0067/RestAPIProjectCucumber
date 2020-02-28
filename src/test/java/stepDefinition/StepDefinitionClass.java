@@ -56,6 +56,7 @@ public class StepDefinitionClass extends Utils {
 	@Then("{string} in response body is {string}")
 	public void in_response_body_is(String key, String value) {
 		String key1 = res.jsonPath().get(key);
+		System.out.println(key1);
 		Assert.assertEquals(key1, value);
 	}
 	@Then("Verify the place_id of maps that were created using and return same name {string} using {string}")
